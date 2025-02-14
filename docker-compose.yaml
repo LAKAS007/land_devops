@@ -1,0 +1,26 @@
+services:
+#first image
+  web:
+    image: "web-image:1.1.0"
+    container_name: "web-container"
+
+    volumes:
+      - "../volume:/tmp/"
+    build:
+        "./"
+    ports:
+      - "8085:80"
+    
+
+#second image
+  app:
+    image: "app-image:1.1.0"
+    container_name: "app-container"
+
+    volumes:
+      - "../volume:/tmp/"
+    build:
+        "./"
+    ports:
+      - "8086:80"
+    
