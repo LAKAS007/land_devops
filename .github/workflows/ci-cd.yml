@@ -25,7 +25,7 @@ jobs:
 
     - name: Run Python script
       run: |
-        python versionUpdateScript.py
+        python versionUpdateScript.py patch
   
     - name: Configure Git
       run: |
