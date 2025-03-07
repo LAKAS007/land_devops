@@ -32,7 +32,7 @@ jobs:
       run: |
         OLD_VERSION=$(cat .github/workflows/version)
         echo "${OLD_VERSION}"
-        echo "OLD_VERSION=${OLD_VERSION}" >> $GITHUB_OUPUT
+        echo "OLD_VERSION=${OLD_VERSION}" >> $GITHUB_OUTPUT
 
     - name: Run Python script
       if: startsWith(steps.branch-names.ouputs.current_branch, 'feature')
@@ -50,7 +50,7 @@ jobs:
       run: |
         NEW_VERSION=$(cat .github/workflows/version)
         echo "${NEW_VERSION}"
-        echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUPUT
+        echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
 
 
     - name: Configure Git
