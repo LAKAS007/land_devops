@@ -39,12 +39,16 @@ jobs:
     - name: update minor
       if: startsWith(steps.branch-names.outputs.current_branch, 'feature')
       run: |
-        python .github/workflows/versionUpdateScript.py minor
+        pwd
+        cd ./github/workflows
+        python versionUpdateScript.py minor
     
     - name: update patch 
       if: startsWith(steps.branch-names.outputs.current_branch, 'hotfix')  
       run: |
-        python .github/workflows/versionUpdateScript.py patch
+        pwd
+        cd ./github/workflows
+        python versionUpdateScript.py patch
     
     # new v
     - name: get new_version 
