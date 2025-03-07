@@ -27,4 +27,3 @@ jobs:
     uses: LAKAS007/land_devops/.github/workflows/tests.yml@release
     with:
       version: alpha
-
