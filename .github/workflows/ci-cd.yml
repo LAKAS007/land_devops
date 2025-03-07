@@ -40,14 +40,14 @@ jobs:
       if: startsWith(steps.branch-names.outputs.current_branch, 'feature')
       run: |
         pwd
-        cd ./github/workflows
+        cd ./.github/workflows
         python versionUpdateScript.py minor
     
     - name: update patch 
       if: startsWith(steps.branch-names.outputs.current_branch, 'hotfix')  
       run: |
         pwd
-        cd ./github/workflows
+        cd ./.github/workflows
         python versionUpdateScript.py patch
     
     # new v
