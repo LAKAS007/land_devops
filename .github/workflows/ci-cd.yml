@@ -25,7 +25,7 @@ jobs:
 
     - name: Run Python script
       run: |
-        python versionUpdateScript.py patch
+        python .github/workflows/versionUpdateScript.py patch
   
     - name: Configure Git
       run: |
