@@ -7,7 +7,7 @@ on:
     - release
 jobs:
   run-script:
-    if: startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/release/')
+    if: startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/hotfix/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -21,3 +21,10 @@ jobs:
       - name: Run Python script
         run: |
           python versionUpdateScript.py
+  test-fixme:
+    name: (TST)
+    needs: build-fixme
+    uses: LAKAS007/land_devops/.guthub/workflows/tests.yml@release
+    with:
+      version: alpha
+
