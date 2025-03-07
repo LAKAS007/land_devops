@@ -9,6 +9,8 @@ jobs:
   run-script:
     # if: startsWith(steps.branch-names.outputs.current_brunch, 'refs/heads/feature/') || startsWith(steps.branch-names.outputs.current_brunch, 'refs/heads/hotfix/')
     runs-on: ubuntu-latest
+    permissions: 
+      contents: write
     outputs: 
       old_v: ${{steps.get-old-v.outputs.OLD_VERSION}}
       new_v: ${{steps.get-new-v.outputs.NEW_VERSION}}
@@ -34,12 +36,12 @@ jobs:
         echo "${OLD_VERSION}"
         echo "OLD_VERSION=${OLD_VERSION}" >> $GITHUB_OUTPUT
 
-    - name: Run Python script
+    - name: update minor
       if: startsWith(steps.branch-names.outputs.current_branch, 'feature')
       run: |
         python .github/workflows/versionUpdateScript.py minor
     
-    - name: Run Python script
+    - name: update patch 
       if: startsWith(steps.branch-names.outputs.current_branch, 'hotfix')  
       run: |
         python .github/workflows/versionUpdateScript.py patch
