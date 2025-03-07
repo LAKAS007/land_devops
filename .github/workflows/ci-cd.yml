@@ -35,12 +35,12 @@ jobs:
         echo "OLD_VERSION=${OLD_VERSION}" >> $GITHUB_OUTPUT
 
     - name: Run Python script
-      if: startsWith(steps.branch-names.ouputs.current_branch, 'feature')
+      if: startsWith(steps.branch-names.outputs.current_branch, 'feature')
       run: |
         python .github/workflows/versionUpdateScript.py minor
     
     - name: Run Python script
-      if: startsWith(steps.branch-names.ouputs.current_branch, 'hotfix')  
+      if: startsWith(steps.branch-names.outputs.current_branch, 'hotfix')  
       run: |
         python .github/workflows/versionUpdateScript.py patch
     
