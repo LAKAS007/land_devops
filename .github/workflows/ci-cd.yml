@@ -1,0 +1,23 @@
+name: Version update pipeline
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+    - release
+jobs:
+  run-script:
+    if: startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/release/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.13.2'
+
+      - name: Run Python script
+        run: |
+          python versionUpdateScript.py
