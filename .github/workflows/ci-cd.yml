@@ -24,7 +24,7 @@ jobs:
   test-fixme:
     name: (TST)
     needs: build-fixme
-    uses: LAKAS007/land_devops/.guthub/workflows/tests.yml@release
+    uses: LAKAS007/land_devops/.github/workflows/tests.yml@release
     with:
       version: alpha
 
