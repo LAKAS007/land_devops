@@ -4,20 +4,20 @@ from datetime import datetime
 
 
 def read_version():
-    if os.path.exists("version"):
-        with open("version", "r") as f:
+    if os.path.exists("version.txt"):
+        with open("version.txt", "r") as f:
             return f.read().strip()
     else:
         return None
 
 
 def write_version(version):
-    with open("version", "w") as f:
+    with open("version.txt", "w") as f:
         f.write(version)
 
 
 def write_log(old_version, new_version, update_type):
-    with open("version_log", "a") as log_file:
+    with open("version_log.txt", "a") as log_file:
         timestamp = datetime.now().strftime("%d.%m.%Y %H:%M:%S.%f")[:-3] 
         log_message = f"[{new_version}] <- [{old_version}][{timestamp}] {update_type} update\n"
         log_file.write(log_message)
@@ -40,7 +40,7 @@ def increment_version(version, update_type):
 
 
 def main():
-    if not os.path.exists("version"):
+    if not os.path.exists("version.txt"):
         print("There is no this file, create new version file with 1.0.0.")
         write_version("1.0.0")
 
