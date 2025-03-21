@@ -52,7 +52,7 @@ jobs:
     - name: get new_version 
       id: get-new-v
       run: |
-        NEW_VERSION=$(cat .github/workflows/version)
+        NEW_VERSION=$(cat .github/workflows/version.txt)
         echo "${NEW_VERSION}"
         echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
 
