@@ -65,7 +65,7 @@ jobs:
     - name: Commit and push changes
       run: |
         git add .
-        git commit -m "Update [${{steps.get-new-v.outputs.NEW_VERSION}}] <- [${{steps.get-new-v.outputs.NEW_VERSION}}]"
+        git commit -m "Update [${{steps.get-new-v.outputs.NEW_VERSION}}] <- [${{steps.get-new-v.outputs.OLD_VERSION}}]"
         git push origin release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
