@@ -32,7 +32,7 @@ jobs:
     - name: get old_version 
       id: get-old-v
       run: |
-        OLD_VERSION=$(cat .github/workflows/version)
+        OLD_VERSION=$(cat .github/workflows/version.txt)
         echo "${OLD_VERSION}"
         echo "OLD_VERSION=${OLD_VERSION}" >> $GITHUB_OUTPUT
 
