@@ -71,3 +71,5 @@ jobs:
                     repo: context.repo.repo,
                     labels: ['${{ env.LABEL_SEC }}']
                     })
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
