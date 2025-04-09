@@ -69,8 +69,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
-    -name: test
-    run: echo "PR number is ${{ inputs.pr_number }}"
+    - name: test
+      run: echo "PR number is ${{ inputs.pr_number }}"
 
   security:
     name: (SEC) Security
