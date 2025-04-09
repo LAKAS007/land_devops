@@ -12,7 +12,7 @@ def read_version():
 
 
 def write_version(version):
-    with open("version.txt", "w") as f:
+    with open("../../version.txt", "w") as f:
         f.write(version)
 
 
