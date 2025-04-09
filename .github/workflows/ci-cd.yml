@@ -68,6 +68,9 @@ jobs:
         git push -u origin release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    -name: test
+    run: echo "PR number is ${{ inputs.pr_number }}"
 
   security:
     name: (SEC) Security
@@ -79,7 +82,7 @@ jobs:
       repository-projects: write
       id-token: write
     with:
-      pr_number: ${{ github.event.pull_request.number }}   # <-- ДОБАВЬ ЭТО
+      pr_number: ${{ github.event.pull_request.number }}
     secrets:
       ACTIONS_PAT: ${{ secrets.ACTIONS_PAT }}
 
