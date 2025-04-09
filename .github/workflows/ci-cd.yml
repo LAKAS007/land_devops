@@ -72,7 +72,7 @@ jobs:
 
   security:
     name: Security part
-    needs: pre-merge-check
+    needs: run-script
     uses: LAKAS007/land_devops/.github/workflows/security.yml@release
     permissions:
       contents: write
