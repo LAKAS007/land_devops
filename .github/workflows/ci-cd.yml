@@ -70,7 +70,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   security:
-    name: Security part
+    name: (SEC) Security
     needs: run-script
     uses: LAKAS007/land_devops/.github/workflows/security.yml@release
     permissions:
@@ -85,4 +85,3 @@ jobs:
     uses: LAKAS007/land_devops/.github/workflows/tests.yml@release
     with:
       version: alpha
-      
