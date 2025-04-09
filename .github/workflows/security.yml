@@ -1,6 +1,10 @@
 name: Security scan
 on:
-    workflow_call:
+  workflow_call:
+    inputs:
+      pr_number:
+        required: true
+        type: number
 
 env:
     LABEL_SEC: sec-passed
@@ -64,7 +68,7 @@ jobs:
                 github-token: ${{ secrets.ACTIONS_PAT }}
                 script: |
                     github.rest.issues.addLabels({
-                    issue_number: context.issue.number,
+                    issue_number: ${{ inputs.pr_number }},
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     labels: ['${{ env.LABEL_SEC }}']
