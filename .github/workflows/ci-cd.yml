@@ -70,9 +70,19 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  security:
+    name: Security part
+    needs: pre-merge-check
+    uses: LAKAS007/land_devops/.github/workflows/security.yml@release
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+      id-token: write
+
   test-fixme:
     name: (TST)
-    needs: run-script
+    needs: security
     uses: LAKAS007/land_devops/.github/workflows/tests.yml@release
     with:
       version: alpha
