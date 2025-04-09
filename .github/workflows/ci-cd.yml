@@ -78,6 +78,10 @@ jobs:
       pull-requests: write
       repository-projects: write
       id-token: write
+    with:
+      pr_number: ${{ github.event.pull_request.number }}   # <-- ДОБАВЬ ЭТО
+    secrets:
+      ACTIONS_PAT: ${{ secrets.ACTIONS_PAT }}
 
   test-fixme:
     name: (TST)
