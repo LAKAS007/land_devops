@@ -5,7 +5,7 @@ on:
 env:
     LABEL_SEC: sec-passed
 
-# jobs:
+jobs:
 #     antivirus:
 #         runs-on: ubuntu-latest
 #         name: Antivirus

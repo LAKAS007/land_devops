@@ -7,7 +7,6 @@ on:
     - release
 jobs:
   run-script:
-    # if: startsWith(steps.branch-names.outputs.current_brunch, 'refs/heads/feature/') || startsWith(steps.branch-names.outputs.current_brunch, 'refs/heads/hotfix/')
     runs-on: ubuntu-latest
     permissions: 
       contents: write
