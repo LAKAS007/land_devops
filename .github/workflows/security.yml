@@ -8,7 +8,6 @@ on:
     secrets:
       ACTIONS_PAT:
         required: true
-        type: string
 
 env:
     LABEL_SEC: sec-passed
