@@ -54,7 +54,7 @@ jobs:
         echo "Changes: Describe changes here" >> changelog.md
 
     - name: Upload changelog as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: changelog
         path: changelog.md
