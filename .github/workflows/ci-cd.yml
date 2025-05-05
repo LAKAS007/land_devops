@@ -1,5 +1,73 @@
-- name: Upload changelog as artifact
-  uses: actions/upload-artifact@v3
-  with:
-    name: changelog
-    path: changelog.md
+name: Version update pipeline
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+    - release
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    permissions: 
+      contents: write
+    outputs: 
+      old_v: ${{ steps.get-old-v.outputs.OLD_VERSION }}
+      new_v: ${{ steps.get-new-v.outputs.NEW_VERSION }}
+    steps:
+    - name: Get branch names
+      id: branch-names
+      uses: tj-actions/branch-names@v8
+      
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.13.2'
+    
+    # old v
+    - name: get old_version
+      id: get-old-v
+      run: |
+        OLD_VERSION=$(cat .github/workflows/version.txt)
+        echo "${OLD_VERSION}"
+        echo "OLD_VERSION=${OLD_VERSION}" >> $GITHUB_OUTPUT
+
+    # new v
+    - name: get new_version
+      id: get-new-v
+      run: |
+        NEW_VERSION=$(cat .github/workflows/version.txt)
+        echo "${NEW_VERSION}"
+        echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+    - name: Add changelog entry
+      run: |
+        if [ ! -f changelog.md ]; then
+          echo "# Changelog" > changelog.md
+          echo "Initial changelog" >> changelog.md
+        fi
+        echo "## Version ${{ steps.get-new-v.outputs.NEW_VERSION }} - $(date)" | cat - changelog.md > temp && mv temp changelog.md
+        echo "Branch: ${{ steps.branch-names.outputs.current_branch }}" >> changelog.md
+        echo "Changes: Describe changes here" >> changelog.md
+
+    - name: Upload changelog as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: changelog
+        path: changelog.md
+
+    - name: Configure Git
+      run: |
+        git config user.name "Github Actions Bot"
+        git config user.email "<>"
+
+    - name: Commit and push changes
+      run: |
+        git add changelog.md
+        git commit -m "Update changelog for version [${{ steps.get-new-v.outputs.NEW_VERSION }}]"
+        git push -u origin release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
