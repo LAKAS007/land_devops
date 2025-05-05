@@ -107,5 +107,5 @@ jobs:
           git add changelog.md
           git commit -m "Update changelog for version ${NEW_VERSION} from branch ${BRANCH_NAME}"
           git push -u origin release
-      env:
+    env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
