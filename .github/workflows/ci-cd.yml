@@ -12,9 +12,10 @@ jobs:
     permissions: 
       contents: write
     outputs: 
-      old_v: ${{ steps.get-old-v.outputs.OLD_VERSION }}
-      new_v: ${{ steps.get-new-v.outputs.NEW_VERSION }}
+      old_v: ${{steps.get-old-v.outputs.OLD_VERSION}}
+      new_v: ${{steps.get-new-v.outputs.NEW_VERSION}}
     steps:
+
     - name: Get branch names
       id: branch-names
       uses: tj-actions/branch-names@v8
@@ -27,47 +28,84 @@ jobs:
       with:
         python-version: '3.13.2'
     
-    # old v
-    - name: get old_version
+    # old v 
+    - name: get old_version 
       id: get-old-v
       run: |
         OLD_VERSION=$(cat .github/workflows/version.txt)
         echo "${OLD_VERSION}"
         echo "OLD_VERSION=${OLD_VERSION}" >> $GITHUB_OUTPUT
 
+    - name: update minor
+      if: startsWith(steps.branch-names.outputs.current_branch, 'feature')
+      run: |
+        cd ./.github/workflows
+        python versionUpdateScript.py minor
+    
+    - name: update patch 
+      if: startsWith(steps.branch-names.outputs.current_branch, 'hotfix')  
+      run: |
+        cd ./.github/workflows
+        python versionUpdateScript.py patch
+    
     # new v
-    - name: get new_version
+    - name: get new_version 
       id: get-new-v
       run: |
         NEW_VERSION=$(cat .github/workflows/version.txt)
         echo "${NEW_VERSION}"
         echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
 
-    - name: Add changelog entry
-      run: |
-        if [ ! -f changelog.md ]; then
-          echo "# Changelog" > changelog.md
-          echo "Initial changelog" >> changelog.md
-        fi
-        echo "## Version ${{ steps.get-new-v.outputs.NEW_VERSION }} - $(date)" | cat - changelog.md > temp && mv temp changelog.md
-        echo "Branch: ${{ steps.branch-names.outputs.current_branch }}" >> changelog.md
-        echo "Changes: Describe changes here" >> changelog.md
-
-    - name: Upload changelog as artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: changelog
-        path: changelog.md
-
-    - name: Configure Git
+    - name: Commit version changes
       run: |
         git config user.name "Github Actions Bot"
-        git config user.email "<>"
-
-    - name: Commit and push changes
-      run: |
-        git add changelog.md
-        git commit -m "Update changelog for version [${{ steps.get-new-v.outputs.NEW_VERSION }}]"
+        git config user.email "bot@example.com"
+        git add .github/workflows/version.txt
+        git commit -m "Update version from ${{steps.get-old-v.outputs.OLD_VERSION}} to ${{steps.get-new-v.outputs.NEW_VERSION}}"
         git push -u origin release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  security:
+    name: (SEC) Security
+    needs: run-script
+    uses: LAKAS007/land_devops/.github/workflows/security.yml@release
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+      id-token: write
+    with:
+      pr_number: ${{ github.event.pull_request.number }}
+    secrets:
+      ACTIONS_PAT: ${{ secrets.ACTIONS_PAT }}
+
+  test-fixme:
+    name: (TST) Test
+    needs: security
+    uses: LAKAS007/land_devops/.github/workflows/tests.yml@release
+    with:
+      version: alpha
+
+  changelog-update:
+    name: Update changelog
+    needs: test-fixme
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code again
+        uses: actions/checkout@v2
+
+      - name: Add changelog entry
+        run: |
+          BRANCH_NAME=${{ steps.branch-names.outputs.current_branch }}
+          NEW_VERSION=${{ steps.get-new-v.outputs.NEW_VERSION }}
+          echo "### Version ${NEW_VERSION} - ${BRANCH_NAME}" >> changelog.md
+          echo "Changes included in this version:" >> changelog.md
+          echo "- Added changes from branch ${BRANCH_NAME}" >> changelog.md
+          git config user.name "Github Actions Bot"
+          git config user.email "bot@example.com"
+          git add changelog.md
+          git commit -m "Update changelog for version ${NEW_VERSION} from branch ${BRANCH_NAME}"
+          git push -u origin release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
