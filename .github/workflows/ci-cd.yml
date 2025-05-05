@@ -5,6 +5,7 @@ on:
     types: [closed]
     branches:
     - release
+
 jobs:
   run-script:
     runs-on: ubuntu-latest
@@ -18,7 +19,7 @@ jobs:
     - name: Get branch names
       id: branch-names
       uses: tj-actions/branch-names@v8
-      
+
     - name: Checkout code
       uses: actions/checkout@v2
 
@@ -26,8 +27,8 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.13.2'
-    
-    # old v 
+
+    # Get old version
     - name: get old_version 
       id: get-old-v
       run: |
@@ -40,21 +41,20 @@ jobs:
       run: |
         cd ./.github/workflows
         python versionUpdateScript.py minor
-    
+
     - name: update patch 
       if: startsWith(steps.branch-names.outputs.current_branch, 'hotfix')  
       run: |
         cd ./.github/workflows
         python versionUpdateScript.py patch
-    
-    # new v
+
+    # Get new version
     - name: get new_version 
       id: get-new-v
       run: |
         NEW_VERSION=$(cat .github/workflows/version.txt)
         echo "${NEW_VERSION}"
         echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
-
 
     - name: Configure Git
       run: |
@@ -64,11 +64,30 @@ jobs:
     - name: Commit and push changes
       run: |
         git add .
-        git commit -m "Update [${{steps.get-new-v.outputs.NEW_VERSION}}] <- [${{steps.get-new-v.outputs.OLD_VERSION}}]"
+        git commit -m "Update [${{steps.get-new-v.outputs.NEW_VERSION}}] <- [${{steps.get-old-v.outputs.OLD_VERSION}}]"
         git push -u origin release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+
+    # Add changelog entry
+    - name: Update changelog.md
+      run: |
+        NEW_VERSION=${{ steps.get-new-v.outputs.NEW_VERSION }}
+        BRANCH=${{ steps.branch-names.outputs.current_branch }}
+        DATE=$(date "+%Y-%m-%d")
+        echo "### Version $NEW_VERSION - $DATE" >> changelog.md
+        echo "- Merged branch: $BRANCH" >> changelog.md
+        git add changelog.md
+        git commit -m "Update changelog for version $NEW_VERSION"
+        git push
+
+    # Upload changelog as artifact
+    - name: Upload changelog as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: changelog
+        path: changelog.md
+
     - name: test
       run: echo "PR number is ${{ inputs.pr_number }}"
 
