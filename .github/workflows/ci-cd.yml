@@ -97,8 +97,8 @@ jobs:
 
       - name: Add changelog entry
         run: |
-          BRANCH_NAME=${{ steps.branch-names.outputs.current_branch }}
-          NEW_VERSION=${{ steps.get-new-v.outputs.NEW_VERSION }}
+          BRANCH_NAME=${{ needs.branch-names.outputs.current_branch }}
+          NEW_VERSION=${{ needs.get-new-v.outputs.NEW_VERSION }}
           echo "### Version ${NEW_VERSION} - ${BRANCH_NAME}" >> changelog.md
           echo "Changes included in this version:" >> changelog.md
           echo "- Added changes from branch ${BRANCH_NAME}" >> changelog.md
