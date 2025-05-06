@@ -14,6 +14,7 @@ jobs:
     outputs: 
       old_v: ${{steps.get-old-v.outputs.OLD_VERSION}}
       new_v: ${{steps.get-new-v.outputs.NEW_VERSION}}
+      branch_name: ${{ steps.branch-names.outputs.current_branch }}
     steps:
 
     - name: Get branch names
@@ -97,8 +98,8 @@ jobs:
 
       - name: Add changelog entry
         run: |
-          BRANCH_NAME=${{ steps.branch-names.outputs.current_branch }}
-          NEW_VERSION=${{ steps.get-new-v.outputs.NEW_VERSION }}
+          BRANCH_NAME="${{ needs.run-script.outputs.branch_name }}"
+          NEW_VERSION="${{ needs.run-script.outputs.new_v }}"
           echo "### Version ${NEW_VERSION} - ${BRANCH_NAME}" >> changelog.md
           echo "Changes included in this version:" >> changelog.md
           echo "- Added changes from branch ${BRANCH_NAME}" >> changelog.md
