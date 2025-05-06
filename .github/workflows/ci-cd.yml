@@ -60,7 +60,7 @@ jobs:
       run: |
         git config user.name "Github Actions Bot"
         git config user.email "bot@example.com"
-        git add .github/workflows/version.txt
+        git add .
         git commit -m "Update version from ${{steps.get-old-v.outputs.OLD_VERSION}} to ${{steps.get-new-v.outputs.NEW_VERSION}}"
         git push -u origin release
       env:
