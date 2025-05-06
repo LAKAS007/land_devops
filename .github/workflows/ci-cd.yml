@@ -95,6 +95,8 @@ jobs:
     steps:
       - name: Checkout code again
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.ACTIONS_PAT }}
 
       - name: Add changelog entry
         run: |
